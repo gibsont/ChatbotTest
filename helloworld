@@ -1,1 +1,105 @@
-console.log("Hello world");
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic Tac Toe</title>
+    <style>
+      .board {
+        display: flex;
+        flex-wrap: wrap;
+        width: 300px;
+        height: 300px;
+        margin: auto;
+      }
+
+      .cell {
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+        font-size: 72px;
+        text-align: center;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .cell:hover {
+        background-color: lightgray;
+      }
+
+      .win {
+        background-color: green;
+      }
+
+      .lose {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tic Tac Toe</h1>
+    <div class="board"></div>
+    <script>
+      const board = document.querySelector('.board');
+      const cells = [];
+      let turn = 'X';
+
+      // Create the cells for the board
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.addEventListener('click', () => handleClick(i));
+        cells.push(cell);
+        board.appendChild(cell);
+      }
+
+      // Handle a cell click event
+      function handleClick(index) {
+        if (cells[index].textContent !== '') {
+          return;
+        }
+        cells[index].textContent = turn;
+        cells[index].classList.add(turn);
+        if (checkWin(turn)) {
+          cells.forEach(cell => {
+            if (cell.textContent === turn) {
+              cell.classList.add('win');
+            } else {
+              cell.classList.add('lose');
+            }
+          });
+          alert(`${turn} wins!`);
+        } else if (checkTie()) {
+          alert(`It's a tie!`);
+        } else {
+          turn = turn === 'X' ? 'O' : 'X';
+        }
+      }
+
+      // Check if the given player has won
+      function checkWin(player) {
+        const lines = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6]
+        ];
+        return lines.some(line => {
+          return line.every(index => {
+            return cells[index].textContent === player;
+          });
+        });
+      }
+
+      // Check if the game is a tie
+      function checkTie() {
+        return cells.every(cell => {
+          return cell.textContent !== '';
+        });
+      }
+    </script>
+  </body>
+</html>
+
